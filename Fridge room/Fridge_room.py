@@ -44,7 +44,7 @@ def fridge_room(goal_temp, pris):
         elif gennemsnits_pris <= nuværende_pris < tredje_kvadrant:
             mål_temperatur = 5
         elif tredje_kvadrant <= nuværende_pris <= højeste_pris:
-            mål_temperatur = 6
+            mål_temperatur = 6.5
 
         if T[i-1] > mål_temperatur:
             c_2 = 8*10**(-6)
@@ -90,7 +90,7 @@ def monte_carlo_simple(count, goal_temp, pris):
 
 def main():
     pris = np.genfromtxt("elpris.csv", delimiter=",", usecols=[1])
-    temperatures = np.linspace(3.5, 6.5, num=1)
+    temperatures = np.linspace(3.5, 6.5, num=30)
     best_guess = 0
     best_temp = 0
 
