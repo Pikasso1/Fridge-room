@@ -31,7 +31,10 @@ def fridge_room(goal_temp, price, debug_info=False):
 
     deltat = 300
 
-    for i in range(len(price)):
+    # Set start temperature to be 5
+    T[0] = 5
+
+    for i in range(1, len(price)):
         # Sum up total temperature for debugging
         tot_temp = tot_temp + T[i-1]
 
@@ -124,6 +127,14 @@ def main(debug_info=False):
     if debug_info:
         # Perform monte carlo simulation with debug info
         simulations = monte_carlo_simple(100, 5.0, price, debug_info)
+
+        average_cost = simulations[0]
+
+        # Print average cost
+        print(f"Average cost is given at: {average_cost:.2f}")
+    
+        # Compare to budget of 12000
+        std.compare_to_budget(average_cost, 12000)
 
         return simulations # [ Monte_carlo , [tot_forbrug+tot_madtab, T, forbrug, madtab]]
     else: 

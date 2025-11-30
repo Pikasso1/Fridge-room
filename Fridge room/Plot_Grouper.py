@@ -25,3 +25,22 @@ def group_data(numerical_array, grouping_factor):
         grouped_array[index // grouping_factor] += numerical_array[index]
         
     return grouped_array
+
+def sum_curve_data_generator(array):
+    """
+    Input:
+    array - Numpy array
+
+    Output:
+    summed_array - Numpy array
+
+    Description:
+    Generates a running sum curve from the input array.
+    Each element in the output array is the sum of all previous elements in the input array up to that index.
+    """
+    summed_array = np.zeros(len(array))
+    running_total = 0.0
+    for i in range(len(array)):
+        running_total += array[i]
+        summed_array[i] = running_total
+    return summed_array
