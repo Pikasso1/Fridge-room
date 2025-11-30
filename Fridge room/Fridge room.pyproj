@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>af392245-5d70-42af-8bc7-f2adb42d4cda</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>NP_Fridge_room.py</StartupFile>
+    <StartupFile>Main_starter.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,8 +22,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Fridge_room.py" />
-    <Compile Include="Fie_opgave.py" />
-    <Compile Include="Opgave_2.py" />
+    <Compile Include="Plot_Grouper.py" />
+    <Compile Include="Main_starter.py" />
+    <Compile Include="Smart_fridge_lib.py" />
+    <Compile Include="Std_fridge_lib.py" />
     <Compile Include="NP_Fridge_room.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
