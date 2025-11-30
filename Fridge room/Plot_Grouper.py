@@ -1,4 +1,6 @@
-﻿import numpy as np
+﻿"""Module to group numerical data in a numpy array by a specified factor."""
+
+import numpy as np
 
 def group_data(numerical_array, grouping_factor):
     """

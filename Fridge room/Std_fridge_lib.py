@@ -1,4 +1,6 @@
-﻿import math
+﻿""" Holds standard functions for fridge room simulations """
+
+import math
 import numpy as np
 
 def door_open(random):
@@ -114,6 +116,37 @@ def goal_temp_optimization():
 
     # Print the best found goal temperature and its associated cost
     print(f"\nExpenses given as: {best_guess} at the temp {best_temp}")
+
+def compare_to_budget(average_cost, budget):
+    """
+    Input:
+    average_cost - Float
+    budget - Float
+
+    Output:
+    void
+
+    Description:
+    Compares the average cost to the budget and prints the result
+
+    # Average cost within budget
+    >>> compare_to_budget(11000, 12000)
+    The average cost of 11000 is within the budget of 12000 by 1000.
+
+    # Average cost exceeds budget
+    >>> compare_to_budget(13000, 12000)
+    The average cost of 13000 is exceeds the budget of 12000 by 1000.
+
+    # Unexpected error case
+    >>> compare_to_budget(float('nan'), 12000)
+    An unexpected error occurred during budget comparison.
+    """
+    if average_cost <= budget:
+        print(f"The average cost of {average_cost:.2f} is within the budget of {budget} by {budget - average_cost:.2f}.\n")
+    elif average_cost > budget:
+        print(f"The average cost of {average_cost:.2f} exceeds the budget of {budget} by {average_cost - budget:.2f}.\n")
+    else:
+        print("An unexpected error occurred during budget comparison.\n")
 
 if __name__ == "__main__":
     import doctest

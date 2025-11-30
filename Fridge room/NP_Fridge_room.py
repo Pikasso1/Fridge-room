@@ -1,8 +1,11 @@
-﻿import numpy as np
+﻿""" Smart fridge room simulation with brute force optimizer included """
+
+import numpy as np
+import Std_fridge_lib as std
 import Smart_fridge_lib as smart
 
 
-def main():
+def main(debug_info=False):
     """
     Input: None
 
@@ -28,14 +31,27 @@ def main():
     g4=6.29  # 75% to 100%
 
     # Amount of monte carlo simulations
-    count = 1
+    count = 100
 
-    print(f"Beginning monte carlo simulation with goal temps: {g1}, {g2}, {g3}, {g4}")
+    print(f"Beginning smart simulation with goal temps: {g1}, {g2}, {g3}, {g4}")
 
-    # Calculate average total cost for cooling room
-    cost = monte_carlo(count, price, g1, g2, g3, g4, price_quantiles)
+    if debug_info:
+        # Perform monte carlo simulation with debug info
+        simulations = monte_carlo(count, price, g1, g2, g3, g4, price_quantiles, debug_info)
+        
+        cost = 0
+        for i in range(len(simulations)):
+            # [ Monte_carlo , [food_waste.sum()+power_cost.sum(), T, power_cost, food_waste] ]
+            cost = simulations[0]
 
-    print(f"The best cost is given at {cost:.2f}")
+        print(f"The average cost is given at {cost:.2f}")
+        std.compare_to_budget(cost, 12000)
+        return simulations
+    else: 
+        # Calculate average total cost for cooling room
+        cost = monte_carlo(count, price, g1, g2, g3, g4, price_quantiles)
+        print(f"The average cost is given at {cost:.2f}")
+        std.compare_to_budget(cost, 12000)
 
 def brute_force_optimizer():
     """
@@ -119,15 +135,26 @@ def brute_force_optimizer():
 
 
 
-def monte_carlo(count, price, goal_temp_1, goal_temp_2, goal_temp_3, goal_temp_4, price_quantiles):
+def monte_carlo(count, price, goal_temp_1, goal_temp_2, goal_temp_3, goal_temp_4, price_quantiles, debug_info=False):
     monte_carlo_sum = 0
-    for i in range(count):
-        monte_carlo_sum += fridge_room(price, goal_temp_1, goal_temp_2, goal_temp_3, goal_temp_4, price_quantiles)
+    if debug_info:
+        simulations = []
+        for i in range(count):
+            # Save current simulation result, along with all debug info
+            result = fridge_room(price, goal_temp_1, goal_temp_2, goal_temp_3, goal_temp_4, price_quantiles, debug_info)
+            simulations.append(result)
+            
+            # [food_waste.sum()+power_cost.sum(), T, power_cost, food_waste] 
+            monte_carlo_sum += result[0]
+        return [monte_carlo_sum / count, simulations]
+    else:
+        for i in range(count):
+            monte_carlo_sum += fridge_room(price, goal_temp_1, goal_temp_2, goal_temp_3, goal_temp_4, price_quantiles)
     
-    monte_carlo_average = monte_carlo_sum / count
-    return monte_carlo_average
+        monte_carlo_average = monte_carlo_sum / count
+        return monte_carlo_average
 
-def fridge_room(price, goal_temp_1, goal_temp_2, goal_temp_3, goal_temp_4, price_quantiles):
+def fridge_room(price, goal_temp_1, goal_temp_2, goal_temp_3, goal_temp_4, price_quantiles, debug_info=False):
     # Designate random value to define if the door is open or closed for each time interval
     door_open_chance_value = np.random.random(len(price))
 
@@ -153,7 +180,6 @@ def fridge_room(price, goal_temp_1, goal_temp_2, goal_temp_3, goal_temp_4, price
     for i in range(1, len(price)):
          # Determine if the compressor needs to be turned on, depending on temperature and current price
          c_2 = smart.compressor_start(price[i], T[i-1], goal_temp_1, goal_temp_2, goal_temp_3, goal_temp_4, price_quantiles)
-         
 
          T[i] = T[i-1] + (c_1[i]*(T_rum - T[i-1]) + c_2*(T_komp - T[i-1]))*Delta_t
     
@@ -164,16 +190,13 @@ def fridge_room(price, goal_temp_1, goal_temp_2, goal_temp_3, goal_temp_4, price
          # Calculate power consumption based on if compressor was on
          power_cost[i] += price[i] if c_2 > 0 else 0
     
-    # Return the total cost
-    return food_waste.sum()+power_cost.sum()
+    if debug_info:
+        return [food_waste.sum()+power_cost.sum(), T, power_cost, food_waste]
+    else:
+        # Return the total cost
+        return food_waste.sum()+power_cost.sum()
 
 
-
-
-
-
-
-main()
 # brute_force_optimizer()
 
 if __name__ == "__main__":

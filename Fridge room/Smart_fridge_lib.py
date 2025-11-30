@@ -1,4 +1,4 @@
-﻿
+﻿"""Smart Fridge Library, holds all functions needed to make the smart fride, other than the stdlib"""
 
 def compressor_start(current_price, current_temperature, goal_temp_1, goal_temp_2, goal_temp_3, goal_temp_4, price_quantiles):
     """

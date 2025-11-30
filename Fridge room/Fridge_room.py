@@ -1,4 +1,6 @@
-﻿import random
+﻿""" Simple fridge room simulation """
+
+import random
 import numpy as np
 
 import Std_fridge_lib as std
@@ -92,7 +94,7 @@ def monte_carlo_simple(count, goal_temp, price, debug_info=False):
 
         # Calculate monte carlo average
         monte_carlo_average = monte_carlo_sum/count
-        return [monte_carlo_average, simulations]
+        return [monte_carlo_average, simulations] # [ Monte_carlo , [tot_forbrug+tot_madtab, T, forbrug, madtab]]
     else:
         # Run simulations
         for i in range(count):
@@ -117,12 +119,13 @@ def main(debug_info=False):
     """
     # Read in price data
     price = np.genfromtxt("elpris.csv", delimiter=",", usecols=[1])
-    
+    print("Beginning simple simulation with goal temp 5")
+
     if debug_info:
         # Perform monte carlo simulation with debug info
         simulations = monte_carlo_simple(100, 5.0, price, debug_info)
 
-        return simulations
+        return simulations # [ Monte_carlo , [tot_forbrug+tot_madtab, T, forbrug, madtab]]
     else: 
         # Perform monte carlo simulation at goal temperature of 5.0 degrees
         average_cost = monte_carlo_simple(100, 5.0, price)
@@ -131,7 +134,5 @@ def main(debug_info=False):
         print(f"Average cost is given at: {average_cost}")
     
         # Compare to budget of 12000
-        if average_cost > 12000:
-            print(f"\nOver the budget by {average_cost-12000}")
-        else:
-            print(f"\nUnder the budget by {12000-average_cost}")
+        std.compare_to_budget(average_cost, 12000)
+
